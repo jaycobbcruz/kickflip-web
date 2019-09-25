@@ -103,11 +103,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .item {
     cursor: pointer;
   }
   .item:hover .card .card-body {
-    color: #a1a1a1;
+    color: #717171;
+  }
+  div .card:hover {
+    border: 1px solid #e1e1e1;
   }
 </style>
