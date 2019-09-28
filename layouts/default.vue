@@ -1,5 +1,22 @@
 <template>
   <div>
+    <no-ssr>
+      <notifications group="alerts" position="bottom right">
+        <template slot="body" slot-scope="props">
+          <b-alert
+            :show="props.item.duration || 1000"
+            dismissible
+            :variant="props.item.type || 'info'"
+            @dismissed="props.item.timer=0">
+            <div v-if="props.item.title">
+              <h4 class="alert-heading">{{ props.item.title }}</h4>
+              <hr />
+            </div>
+            <p>{{props.item.text}}</p>
+          </b-alert>
+        </template>
+      </notifications>
+    </no-ssr>
     <b-navbar toggleable="lg">
       <nuxt-link to="/" class="navbar-brand">
         <img src="/images/kickflip-logo.png" width="100" height="30" alt="kickflip" />
@@ -30,6 +47,9 @@
 </template>
 
 <style scoped>
+  .navbar {
+    margin-bottom: 20px;
+  }
   .search_input {
     border: 0;
     outline: 0;
@@ -39,7 +59,7 @@
   .searchbar {
     margin-left: 80px;
     border-radius: 30px;
-    padding: 2px 10px 0 22px;
+    padding: 4px 10px 0 22px;
     background-color: #fff;
     border: 1px solid #e1e1e1;
   }
@@ -49,7 +69,7 @@
   }
   .search_icon {
     font-size: 15px;
-    height: 30px;
+    height: 26px;
     width: 30px;
     float: right;
     display: flex;
@@ -60,6 +80,6 @@
   }
   input {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
+    font-size: 18px;
   }
 </style>

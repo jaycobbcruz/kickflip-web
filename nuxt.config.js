@@ -29,6 +29,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~/plugins/vue-notifications', ssr: false }
   ],
   /*
   ** Nuxt.js dev-modules
@@ -39,8 +40,9 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    // Doc: https://bootstrap-vue.js.org/docs/
     'bootstrap-vue/nuxt',
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy',
     ['nuxt-fontawesome', {
       imports: [
         {
@@ -61,7 +63,23 @@ module.exports = {
     /*
     ** You can extend webpack config here
     */
-    extend (config, ctx) {
+    extend (config, {isDev}) {
+    }
+  },
+  axios: {
+    // baseURL: process.env.API_URL || 'http://localhost:8082/api',
+    // redirectError: {
+    //   401: '/login',
+    //   404: '/notfound'
+    // },
+    proxy: true,
+    debug: true
+  },
+  proxy: {
+    '/api/': {
+      target: 'http://localhost:8082/api',
+      pathRewrite: { '^/api/' : '' },
+      changeOrigin: true
     }
   }
 };
