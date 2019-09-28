@@ -54,13 +54,13 @@ export default {
   watch: {
     entity: {
       handler: function (val) {
-        this.mergeProduct(val)
+        this.merge(val)
       },
       deep: true
     }
   },
   methods: {
-    ...mapMutations('products', ['mergeProduct']),
+    ...mapMutations('products', ['merge']),
     isUpdate () {
       return this.product.hasOwnProperty('id') && this.product.id
     },

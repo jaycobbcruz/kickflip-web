@@ -33,7 +33,7 @@
 
   export default {
     async fetch({store}) {
-      await store.dispatch('products/get')
+      await store.dispatch('products/findAll')
     },
     computed: {
       ...mapState ('products', ['list'])
@@ -62,9 +62,9 @@
       }
     },
     methods: {
-      ...mapActions('products', ['delete', 'get']),
+      ...mapActions('products', ['delete', 'findAll']),
       destroy () {
-        this.delete({id: this.id}).then(() => this.get())
+        this.delete({id: this.id}).then(() => this.findAll())
       }
     }
   }

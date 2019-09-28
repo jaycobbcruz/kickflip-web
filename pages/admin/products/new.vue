@@ -6,7 +6,7 @@
   export default {
     components: { ProductForm },
     fetch ({store}) {
-      store.commit('products/setProduct', {})
+      store.commit('products/set', {})
     }
   }
 </script>
