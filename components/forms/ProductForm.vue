@@ -24,7 +24,13 @@
           <b-form-group label="Quantity">
             <b-form-input type="number" v-model="entity.quantity" required />
           </b-form-group>
-          <b-form-select v-model="entity.status" :options="statuses" required />
+          <b-form-group label="Status">
+            <b-form-select v-model="entity.status" :options="statuses" required />
+          </b-form-group>
+          <b-form-group label="Image">
+            <b-form-file v-model="file" :state="Boolean(file)" placeholder="Choose file" />
+            <b-btn type="button" @click="handleFileUpload">Upload</b-btn>
+          </b-form-group>
         </b-col>
       </b-row>
       <b-btn type="submit">Save</b-btn>
@@ -48,7 +54,8 @@ export default {
         quantity: 0,
         price: 0,
         status: null
-      }
+      },
+      file: null
     }
   },
   watch: {
@@ -64,7 +71,7 @@ export default {
     isUpdate () {
       return this.product.hasOwnProperty('id') && this.product.id
     },
-    submit() {
+    submit () {
       let action = 'products/' + (this.isUpdate() ? 'update' : 'create');
       this.$store.dispatch(action, this.product)
         .then((resp) => {
@@ -74,6 +81,20 @@ export default {
         .catch((resp) => {
           this.$notify({title: 'Error', text: 'Saving failed', type: 'danger', group: 'alerts'})
         })
+    },
+    handleFileUpload () {
+      const formData = new FormData()
+      formData.append("file", this.file)
+      this.$axios
+        .post('/api/files', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+        .then(() => {
+          this.$bvToast.toast('File Upload', {
+            title: 'File Upload Successful',
+            variant: 'success',
+            solid: true
+          })
+        })
+        .catch(console.log)
     }
   },
   mounted () {
