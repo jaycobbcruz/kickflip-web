@@ -75,6 +75,9 @@ module.exports = {
     proxy: true,
     debug: true
   },
+  env: {
+    apiUrl: 'http://localhost:8082/api'
+  },
   proxy: {
     '/api/': {
       target: 'http://localhost:8082/api',

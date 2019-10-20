@@ -27,10 +27,17 @@
           <b-form-group label="Status">
             <b-form-select v-model="entity.status" :options="statuses" required />
           </b-form-group>
+        </b-col>
+      </b-row>
+      <b-row v-if="product.id">
+        <b-col lg="6">
           <b-form-group label="Image">
             <b-form-file v-model="file" :state="Boolean(file)" placeholder="Choose file" />
-            <b-btn type="button" @click="handleFileUpload">Upload</b-btn>
+            <b-btn type="button" @click="handleFileUpload" class="btn-upload">Upload</b-btn>
           </b-form-group>
+        </b-col>
+        <b-col v-if="imageUrl" lg="6">
+          <b-img thumbnail fluid :src="imageUrl" alt="Product Image"></b-img>
         </b-col>
       </b-row>
       <b-btn type="submit">Save</b-btn>
@@ -49,13 +56,15 @@ export default {
   data () {
     return {
       entity: {
+        id: null,
         name: null,
         description: null,
         quantity: 0,
         price: 0,
         status: null
       },
-      file: null
+      file: null,
+      imageUrl: null
     }
   },
   watch: {
@@ -74,7 +83,8 @@ export default {
     submit () {
       let action = 'products/' + (this.isUpdate() ? 'update' : 'create');
       this.$store.dispatch(action, this.product)
-        .then((resp) => {
+        .then(({data}) => {
+          this.product.id = data.id
           this.$notify({text: 'Saving successful', type: 'success', group: 'alerts'})
           this.$router.push('/admin/products')
         })
@@ -86,19 +96,28 @@ export default {
       const formData = new FormData()
       formData.append("file", this.file)
       this.$axios
-        .post('/api/files', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+        .post(`/api/files/product/${this.product.id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
         .then(() => {
-          this.$bvToast.toast('File Upload', {
-            title: 'File Upload Successful',
+          this.$bvToast.toast('File upload successful!', {
+            title: 'File Upload',
             variant: 'success',
             solid: true
           })
+          this.imageUrl = `${process.env.apiUrl}/files/product/${this.product.id}`
         })
         .catch(console.log)
     }
   },
   mounted () {
     this.entity = {...this.product}
+    if (this.entity.id) {
+      this.imageUrl = `${process.env.apiUrl}/files/product/${this.product.id}`
+    }
   }
 }
 </script>
+<style scoped>
+  .btn-upload {
+    margin-top: 5px;
+  }
+</style>
